@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YediMavi — Istanbul</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A96E;
+    --gold-light: #E8D5A3;
+    --dark: #0A0A0A;
+    --dark-2: #111111;
+    --dark-3: #1A1A1A;
+    --white: #F5F0E8;
+    --grey: #888888;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--dark); color: var(--white); font-family: 'Montserrat', sans-serif; font-weight: 300; overflow-x: hidden; }
+
+  /* HERO */
+  .hero {
+    position: relative; height: 100svh; min-height: 600px;
+    display: flex; align-items: flex-end;
+    background: #000; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: url('https://res.cloudinary.com/dofvpeldf/image/upload/v1782636919/039A8880_fpluad.jpg') center center/cover no-repeat;
+    opacity: 0.75;
+  }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+  }
+  .hero-content { position: relative; z-index: 2; padding: 0 8vw 10vh; animation: fadeUp 1.2s ease forwards; }
+  .hero-tag { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+  .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(56px, 9vw, 104px); font-weight: 300; line-height: 1; letter-spacing: -1px; margin-bottom: 16px; }
+  .hero-title em { font-style: italic; color: var(--gold-light); }
+  .hero-subtitle { font-size: 12px; letter-spacing: 4px; color: var(--grey); text-transform: uppercase; margin-bottom: 44px; }
+  .hero-scroll { display: inline-flex; align-items: center; gap: 12px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); text-decoration: none; transition: gap 0.3s; }
+  .hero-scroll:hover { gap: 22px; }
+  .hero-scroll span { display: block; width: 40px; height: 1px; background: var(--gold); transition: width 0.3s; }
+
+  /* VIDEO */
+  .video-section { padding: 120px 8vw; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .section-label { font-size: 10px; letter-spacing: 5px; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 4vw, 56px); font-weight: 300; line-height: 1.1; margin-bottom: 28px; }
+  .section-text { font-size: 14px; line-height: 1.9; color: var(--grey); }
+
+  .video-wrapper { position: relative; border-radius: 2px; overflow: hidden; aspect-ratio: 9/16; max-height: 620px; background: #000; }
+  .video-wrapper iframe { width: 100%; height: 100%; border: none; }
+  .video-border { position: absolute; inset: 12px; border: 1px solid rgba(201,169,110,0.3); pointer-events: none; }
+
+  /* LANG TABS */
+  .lang-tabs { display: flex; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 28px; margin-top: 32px; }
+  .lang-tab { padding: 10px 22px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; color: var(--grey); border: none; border-bottom: 2px solid transparent; margin-bottom: -1px; background: none; font-family: 'Montserrat', sans-serif; transition: all 0.2s; }
+  .lang-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  .lang-content { display: none; }
+  .lang-content.active { display: block; }
+
+  /* DETAILS */
+  .details-section { padding: 80px 8vw; border-top: 1px solid rgba(255,255,255,0.06); }
+  .details-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.06); margin-top: 56px; }
+  .detail-item { background: var(--dark); padding: 44px 32px; text-align: center; transition: background 0.3s; }
+  .detail-item:hover { background: var(--dark-3); }
+  .detail-number { font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 300; color: var(--gold); line-height: 1; margin-bottom: 10px; }
+  .detail-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--grey); }
+
+  /* GALLERY */
+  .gallery-section { padding: 120px 8vw; }
+  .gallery-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; }
+  .gallery-count { font-size: 11px; letter-spacing: 2px; color: var(--grey); }
+  .room-block { margin-bottom: 56px; }
+  .room-label { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+
+  .gallery-grid { display: grid; gap: 6px; grid-template-columns: repeat(3, 1fr); }
+  .gallery-grid .photo { overflow: hidden; cursor: pointer; aspect-ratio: 4/3; }
+  .gallery-grid .photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.7s ease; }
+  .gallery-grid .photo:hover img { transform: scale(1.05); }
+  .gallery-grid.count-1 { grid-template-columns: 1fr; }
+  .gallery-grid.count-1 .photo { aspect-ratio: 16/7; }
+  .gallery-grid.count-2 { grid-template-columns: repeat(2, 1fr); }
+  .gallery-grid.count-2 .photo { aspect-ratio: 3/2; }
+  .gallery-grid.count-3 { grid-template-columns: repeat(3, 1fr); }
+  .gallery-grid.count-4 { grid-template-columns: repeat(2, 1fr); }
+  .gallery-grid.count-5 { grid-template-columns: repeat(3, 1fr); }
+  .gallery-grid.count-5 .photo:first-child { grid-column: span 2; aspect-ratio: 16/9; }
+  .gallery-grid.count-6 { grid-template-columns: repeat(3, 1fr); }
+  .gallery-more { margin-top: 6px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .gallery-more .photo { overflow: hidden; cursor: pointer; aspect-ratio: 4/3; }
+  .gallery-more .photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s ease; }
+  .gallery-more .photo:hover img { transform: scale(1.05); }
+
+  /* CTA */
+  .cta-section { padding: 160px 8vw; text-align: center; background: var(--dark-2); position: relative; overflow: hidden; }
+  .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 700px; height: 700px; background: radial-gradient(circle, rgba(201,169,110,0.05) 0%, transparent 70%); pointer-events: none; }
+  .cta-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(42px, 6vw, 80px); font-weight: 300; line-height: 1.1; margin-bottom: 20px; }
+  .cta-sub { font-size: 13px; color: var(--grey); margin-bottom: 56px; letter-spacing: 1px; }
+  .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+  .btn-primary { display: inline-flex; align-items: center; gap: 10px; padding: 18px 40px; background: var(--gold); color: var(--dark); text-decoration: none; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; font-weight: 500; transition: all 0.3s; font-family: 'Montserrat', sans-serif; }
+  .btn-primary:hover { background: var(--gold-light); }
+  .btn-secondary { display: inline-flex; align-items: center; gap: 10px; padding: 18px 40px; border: 1px solid rgba(201,169,110,0.4); color: var(--gold); text-decoration: none; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; transition: all 0.3s; font-family: 'Montserrat', sans-serif; }
+  .btn-secondary:hover { border-color: var(--gold); background: rgba(201,169,110,0.05); }
+
+
+  /* FOOTER CARDS */
+  .footer-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(255,255,255,0.06); }
+  .footer-card { background: var(--dark-2); padding: 48px 8vw; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .footer-card-video { background: var(--dark-3); text-align: center; align-items: center; }
+  .footer-card-label { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+  .footer-card-title { font-family: "Cormorant Garamond", serif; font-size: 32px; font-weight: 300; color: var(--white); margin-bottom: 28px; }
+  .footer-card-links { display: flex; flex-direction: column; gap: 16px; }
+  .footer-link { display: flex; align-items: center; gap: 12px; color: var(--grey); text-decoration: none; font-size: 13px; letter-spacing: 1px; transition: color 0.2s; }
+  .footer-link:hover { color: var(--gold); }
+  .footer-link svg { flex-shrink: 0; color: var(--gold); }
+  @media (max-width: 768px) { .footer-cards { grid-template-columns: 1fr; } .footer-card { padding: 48px 6vw; } }
+
+  /* FOOTER */
+  footer { padding: 40px 8vw; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.06); font-size: 11px; letter-spacing: 2px; color: var(--grey); }
+  .footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--gold); letter-spacing: 3px; }
+
+  /* LIGHTBOX */
+  .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 1000; align-items: center; justify-content: center; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 92vw; max-height: 92vh; object-fit: contain; }
+  .lb-close { position: absolute; top: 28px; right: 36px; font-size: 36px; color: var(--white); cursor: pointer; background: none; border: none; font-family: 'Cormorant Garamond', serif; opacity: 0.7; }
+  .lb-close:hover { opacity: 1; }
+  .lb-prev, .lb-next { position: absolute; top: 50%; transform: translateY(-50%); font-size: 48px; color: var(--gold); cursor: pointer; background: none; border: none; font-family: 'Cormorant Garamond', serif; opacity: 0.6; padding: 0 20px; }
+  .lb-prev:hover, .lb-next:hover { opacity: 1; }
+  .lb-prev { left: 20px; }
+  .lb-next { right: 20px; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero { height: 100svh !important; min-height: 100svh !important; }
+    .hero-bg { background-position: center center !important; background-size: cover !important; }
+    .hero-content { padding: 0 6vw 8vh; }
+    .hero-title { font-size: clamp(44px, 12vw, 72px); }
+    .video-section { grid-template-columns: 1fr; gap: 48px; padding: 80px 6vw; }
+    .details-grid { grid-template-columns: repeat(2,1fr); }
+    .gallery-grid, .gallery-grid[class*="count-"] { grid-template-columns: repeat(2, 1fr) !important; }
+    .gallery-grid .photo:first-child { grid-column: span 1 !important; aspect-ratio: 4/3 !important; }
+    .gallery-more { grid-template-columns: repeat(2,1fr); }
+    .cta-section, .gallery-section { padding: 80px 6vw; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-tag"><span data-i18n="hero-tag"></span></p>
+    <h1 class="hero-title">Yedi<em>Mavi</em></h1>
+    <p class="hero-subtitle"><span data-i18n="hero-subtitle"></span></p>
+    <a href="#video" class="hero-scroll"><span></span> <span data-i18n="discover"></span></a>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section class="video-section" id="video">
+  <div class="reveal">
+    <p class="section-label"><span data-i18n="about-label"></span></p>
+    <h2 class="section-title"><span data-i18n="about-title"></span></h2>
+
+    <div class="lang-tabs">
+      <button class="lang-tab" onclick="switchLang('tr',this)">TR</button>
+      <button class="lang-tab" onclick="switchLang('en',this)">EN</button>
+      <button class="lang-tab active" onclick="switchLang('fr',this)">FR</button>
+      <button class="lang-tab" onclick="switchLang('ar',this)">AR</button>
+      <button class="lang-tab" onclick="switchLang('ru',this)">RU</button>
+    </div>
+
+    <div id="lang-fr" class="lang-content active">
+      <p class="section-text">Un appartement d'exception offrant une vue panoramique sur la mer, des finitions en marbre premium, des lustres en cristal et un art de vivre incomparable à Istanbul. Disponible pour acquéreurs qualifiés.</p>
+    </div>
+    <div id="lang-en" class="lang-content">
+      <p class="section-text">An exceptional apartment offering panoramic sea views, premium marble finishes, crystal chandeliers and an unmatched Istanbul lifestyle. Available for qualified buyers.</p>
+    </div>
+    <div id="lang-tr" class="lang-content">
+      <p class="section-text">Her odadan panoramik deniz manzarası sunan bu istisnai daire; premium mermer kaplamalar, kristal avizeler ve İstanbul'un eşsiz yaşam tarzını bir arada sunmaktadır. Nitelikli alıcılar için müsaittir.</p>
+    </div>
+    <div id="lang-ar" class="lang-content" style="direction:rtl;text-align:right;">
+      <p class="section-text">شقة استثنائية تطل على البحر بشكل بانورامي، مع تشطيبات رخامية فاخرة وثريات كريستالية وأسلوب حياة لا مثيل له في إسطنبول. متاحة للمشترين المؤهلين.</p>
+    </div>
+    <div id="lang-ru" class="lang-content">
+      <p class="section-text">Исключительная квартира с панорамным видом на море, отделкой из премиального мрамора, хрустальными люстрами и несравненным образом жизни в Стамбуле. Доступно для квалифицированных покупателей.</p>
+    </div>
+  </div>
+
+  <div class="reveal" style="transition-delay:0.2s;">
+    <div class="video-wrapper">
+      <iframe src="https://player.vimeo.com/video/1185852791?badge=0&autopause=0&player_id=0&app_id=58479" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
+
+    </div>
+  </div>
+</section>
+
+<!-- DETAILS -->
+<section class="details-section reveal">
+  <p class="section-label"><span data-i18n="details-label"></span></p>
+  <div class="details-grid">
+    <div class="detail-item">
+      <div class="detail-number">3+1</div>
+      <div class="detail-label"><span data-i18n="rooms"></span></div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-number">204</div>
+      <div class="detail-label">m² Net</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-number">14</div>
+      <div class="detail-label"><span data-i18n="floor"></span></div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-number">∞</div>
+      <div class="detail-label"><span data-i18n="seaview"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery-section">
+  <div class="gallery-header reveal">
+    <div>
+      <p class="section-label"><span data-i18n="gallery-label"></span></p>
+      <h2 class="section-title"><span data-i18n="gallery-title"></span></h2>
+    </div>
+    <div class="gallery-count"><span data-i18n="photos"></span></div>
+  </div>
+      <div class="room-block reveal">
+      <div class="room-label" data-section="Salon">— <span class="sec-label">Salon</span></div>
+      <div class="gallery-grid count-6">
+        <div class="photo" onclick="openLightbox(0)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636919/039A8859-HDR_dyco1u.jpg" alt="Salon"></div>
+        <div class="photo" onclick="openLightbox(1)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636919/039A8853-HDR_ixo80k.jpg" alt="Salon"></div>
+        <div class="photo" onclick="openLightbox(2)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636917/039A8850-HDR_cbi3k2.jpg" alt="Salon"></div>
+        <div class="photo" onclick="openLightbox(3)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636909/039A8846-HDR_teppp1.jpg" alt="Salon"></div>
+        <div class="photo" onclick="openLightbox(4)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636909/039A8838-HDR_c93ggs.jpg" alt="Salon"></div>
+        <div class="photo" onclick="openLightbox(5)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636906/039A8847-HDR_obsv3p.jpg" alt="Salon"></div>
+      </div>
+    </div>
+    <div class="room-block reveal">
+      <div class="room-label" data-section="Cuisine">— <span class="sec-label">Cuisine</span></div>
+      <div class="gallery-grid count-5">
+        <div class="photo" onclick="openLightbox(6)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636903/039A8816-HDR_sistdd.jpg" alt="Cuisine"></div>
+        <div class="photo" onclick="openLightbox(7)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636903/039A8805-HDR_vagus8.jpg" alt="Cuisine"></div>
+        <div class="photo" onclick="openLightbox(8)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636899/039A8796-HDR_f0lidh.jpg" alt="Cuisine"></div>
+        <div class="photo" onclick="openLightbox(9)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636899/039A8808-HDR_n4ytbw.jpg" alt="Cuisine"></div>
+        <div class="photo" onclick="openLightbox(10)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636898/039A8802-HDR_e5ybtd.jpg" alt="Cuisine"></div>
+      </div>
+    </div>
+    <div class="room-block reveal">
+      <div class="room-label" data-section="Chambre 1">— <span class="sec-label">Chambre 1</span></div>
+      <div class="gallery-grid count-4">
+        <div class="photo" onclick="openLightbox(11)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636880/039A8757-HDR_nhh7ca.jpg" alt="Chambre 1"></div>
+        <div class="photo" onclick="openLightbox(12)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636886/039A8769-HDR_e7vtni.jpg" alt="Chambre 1"></div>
+        <div class="photo" onclick="openLightbox(13)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636888/039A8766-HDR_bhhlre.jpg" alt="Chambre 1"></div>
+        <div class="photo" onclick="openLightbox(14)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636890/039A8765-HDR_apguzw.jpg" alt="Chambre 1"></div>
+      </div>
+    </div>
+    <div class="room-block reveal">
+      <div class="room-label" data-section="Chambre 2">— <span class="sec-label">Chambre 2</span></div>
+      <div class="gallery-grid count-3">
+        <div class="photo" onclick="openLightbox(15)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636849/039A8630-HDR_vub6bo.jpg" alt="Chambre 2"></div>
+        <div class="photo" onclick="openLightbox(16)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636864/039A8639-HDR_l7gtqa.jpg" alt="Chambre 2"></div>
+        <div class="photo" onclick="openLightbox(17)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636866/039A8645-HDR_ezbhln.jpg" alt="Chambre 2"></div>
+      </div>
+    </div>
+    <div class="room-block reveal">
+      <div class="room-label" data-section="Chambre Enfant">— <span class="sec-label">Chambre Enfant</span></div>
+      <div class="gallery-grid count-3">
+        <div class="photo" onclick="openLightbox(18)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636872/039A8726-HDR_gkmsx0.jpg" alt="Chambre Enfant"></div>
+        <div class="photo" onclick="openLightbox(19)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636874/039A8739-HDR_y7sy6i.jpg" alt="Chambre Enfant"></div>
+        <div class="photo" onclick="openLightbox(20)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636886/039A8729-HDR_c6rlvh.jpg" alt="Chambre Enfant"></div>
+      </div>
+    </div>
+    <div class="room-block reveal">
+      <div class="room-label" data-section="Salle de bain 1">— <span class="sec-label">Salle de bain 1</span></div>
+      <div class="gallery-grid count-3">
+        <div class="photo" onclick="openLightbox(21)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636901/039A8778-HDR_hjcnz4.jpg" alt="Salle de bain 1"></div>
+        <div class="photo" onclick="openLightbox(22)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636891/039A8775-HDR_zybave.jpg" alt="Salle de bain 1"></div>
+        <div class="photo" onclick="openLightbox(23)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636888/039A8772-HDR_ttejwf.jpg" alt="Salle de bain 1"></div>
+      </div>
+    </div>
+    <div class="room-block reveal">
+      <div class="room-label" data-section="Salle de bain 2">— <span class="sec-label">Salle de bain 2</span></div>
+      <div class="gallery-grid count-2">
+        <div class="photo" onclick="openLightbox(24)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636880/039A8744-HDR_iph4k4.jpg" alt="Salle de bain 2"></div>
+        <div class="photo" onclick="openLightbox(25)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636883/039A8745-HDR_wk8cnh.jpg" alt="Salle de bain 2"></div>
+      </div>
+    </div>
+    <div class="room-block reveal">
+      <div class="room-label" data-section="Extra">— <span class="sec-label">Extra</span></div>
+      <div class="gallery-grid count-11">
+        <div class="photo" onclick="openLightbox(26)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636920/039A8865-HDR_a6s7rj.jpg" alt="Extra"></div>
+        <div class="photo" onclick="openLightbox(27)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636919/039A8880_fpluad.jpg" alt="Extra"></div>
+        <div class="photo" onclick="openLightbox(28)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636918/039A8878_isb6mu.jpg" alt="Extra"></div>
+        <div class="photo" onclick="openLightbox(29)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636913/039A8862-HDR_v63fer.jpg" alt="Extra"></div>
+        <div class="photo" onclick="openLightbox(30)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636892/039A8793-HDR_gr3u1t.jpg" alt="Extra"></div>
+        <div class="photo" onclick="openLightbox(31)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636876/039A8708-HDR_oci8hx.jpg" alt="Extra"></div>
+        <div class="photo" onclick="openLightbox(32)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636872/039A8657-HDR_gxb6i6.jpg" alt="Extra"></div>
+        <div class="photo" onclick="openLightbox(33)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636865/039A8651-HDR_rkcbkq.jpg" alt="Extra"></div>
+        <div class="photo" onclick="openLightbox(34)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636865/039A8648-HDR_jugcvo.jpg" alt="Extra"></div>
+        <div class="photo" onclick="openLightbox(35)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636857/039A8690-HDR_ekobd5.jpg" alt="Extra"></div>
+        <div class="photo" onclick="openLightbox(36)"><img src="https://res.cloudinary.com/dofvpeldf/image/upload/v1782636853/039A8684-HDR_xa8krn.jpg" alt="Extra"></div>
+      </div>
+    </div>
+    <div class="gallery-count reveal"><span data-i18n="photos"></span></div>
+  </section>
+
+
+
+<!-- FOOTER CARDS -->
+<section class="footer-cards">
+  <!-- Agent card -->
+  <div class="footer-card">
+    <div class="footer-card-label"><span data-i18n="contact"></span></div>
+    <div class="footer-card-title">YediMavi</div>
+    <div class="footer-card-links">
+      <a href="https://wa.me/905527977189?text=Merhaba%2C%20YediMavi%20hakkında%20bilgi%20almak%20istiyorum." target="_blank" class="footer-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        +90 552 797 71 89
+      </a>
+      <a href="mailto:kurtemirhan177@gmail.com" class="footer-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        kurtemirhan177@gmail.com
+      </a>
+    </div>
+  </div>
+
+  <!-- Videographer card -->
+  <div class="footer-card footer-card-video">
+    <div class="footer-card-label">Photo & Video</div>
+    <div class="footer-card-title">emfilmscreative</div>
+    <div class="footer-card-links">
+      <a href="https://www.instagram.com/emfilmscreative/" target="_blank" class="footer-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        @emfilmscreative
+      </a>
+      <a href="https://wa.me/905527977189" target="_blank" class="footer-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        +90 552 797 71 89
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER BOTTOM -->
+<footer>
+  <div class="footer-brand">YediMavi</div>
+  <div><span data-i18n="footer-sub"></span></div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="closeLightbox()">×</button>
+  <button class="lb-prev" onclick="navLightbox(-1)">‹</button>
+  <img id="lb-img" src="" alt="">
+  <button class="lb-next" onclick="navLightbox(1)">›</button>
+</div>
+
+<script>
+const i18n = {
+  "fr": {
+    "hero-tag": "Istanbul — Appartement de Luxe", "hero-subtitle": "Yedi Mavi · Sept Bleus",
+    "discover": "Découvrir",
+    "about-label": "À Propos",
+    "about-title": "Une vie<br>face à la mer",
+    "details-label": "Détails du Bien",
+    "rooms": "Pièces",
+    "floor": "Étage",
+    "seaview": "Vue Mer",
+    "gallery-label": "Galerie",
+    "gallery-title": "Chaque détail,<br>dans le cadre.",
+    "photos": "37 photos",
+    "contact": "Contact",
+    "footer-sub": "Istanbul Immobilier de Luxe"
+  },
+  "en": {
+    "hero-tag": "Istanbul — Luxury Apartment", "hero-subtitle": "Yedi Mavi · Seven Blues",
+    "discover": "Discover",
+    "about-label": "About",
+    "about-title": "A life<br>facing the sea",
+    "details-label": "Property Details",
+    "rooms": "Rooms",
+    "floor": "Floor",
+    "seaview": "Sea View",
+    "gallery-label": "Gallery",
+    "gallery-title": "Every detail,<br>in frame.",
+    "photos": "37 photos",
+    "contact": "Contact",
+    "footer-sub": "Istanbul Luxury Real Estate"
+  },
+  "tr": {
+    "hero-tag": "İstanbul — Lüks Daire", "hero-subtitle": "Yedi Mavi · Seven Blues",
+    "discover": "Keşfet",
+    "about-label": "Mülk Hakkında",
+    "about-title": "Denize karşı<br>bir yaşam",
+    "details-label": "Daire Bilgileri",
+    "rooms": "Oda",
+    "floor": "Kat",
+    "seaview": "Deniz Manzarası",
+    "gallery-label": "Galeri",
+    "gallery-title": "Her detay,<br>kadrajda.",
+    "photos": "37 fotoğraf",
+    "contact": "İletişim",
+    "footer-sub": "İstanbul Lüks Gayrimenkul"
+  },
+  "ar": {
+    "hero-tag": "إسطنبول — شقة فاخرة", "hero-subtitle": "يدي مافي · سبعة أزرق",
+    "discover": "اكتشف",
+    "about-label": "عن الشقة",
+    "about-title": "حياة<br>مواجهة البحر",
+    "details-label": "تفاصيل العقار",
+    "rooms": "غرف",
+    "floor": "الطابق",
+    "seaview": "إطلالة بحرية",
+    "gallery-label": "معرض الصور",
+    "gallery-title": "كل التفاصيل،<br>في الإطار.",
+    "photos": "37 صورة",
+    "contact": "تواصل معنا",
+    "footer-sub": "عقارات إسطنبول الفاخرة"
+  },
+  "ru": {
+    "hero-tag": "Стамбул — Люкс Квартира", "hero-subtitle": "Yedi Mavi · Семь Синих",
+    "discover": "Открыть",
+    "about-label": "О Квартире",
+    "about-title": "Жизнь<br>лицом к морю",
+    "details-label": "Детали объекта",
+    "rooms": "Комнаты",
+    "floor": "Этаж",
+    "seaview": "Вид на море",
+    "gallery-label": "Галерея",
+    "gallery-title": "Каждая деталь<br>в кадре.",
+    "photos": "37 фото",
+    "contact": "Контакты",
+    "footer-sub": "Элитная недвижимость Стамбула"
+  }
+};
+const sectionLabels = {
+  "Salon": {
+    "en": "Living Room",
+    "tr": "Salon",
+    "ar": "الصالون",
+    "ru": "Гостиная"
+  },
+  "Cuisine": {
+    "en": "Kitchen",
+    "tr": "Mutfak",
+    "ar": "المطبخ",
+    "ru": "Кухня"
+  },
+  "Chambre 1": {
+    "en": "Bedroom 1",
+    "tr": "Yatak Odası 1",
+    "ar": "غرفة النوم 1",
+    "ru": "Спальня 1"
+  },
+  "Chambre 2": {
+    "en": "Bedroom 2",
+    "tr": "Yatak Odası 2",
+    "ar": "غرفة النوم 2",
+    "ru": "Спальня 2"
+  },
+  "Chambre Enfant": {
+    "en": "Children's Room",
+    "tr": "Çocuk Odası",
+    "ar": "غرفة الأطفال",
+    "ru": "Детская"
+  },
+  "Salle de bain 1": {
+    "en": "Bathroom 1",
+    "tr": "Banyo 1",
+    "ar": "الحمام 1",
+    "ru": "Ванная 1"
+  },
+  "Salle de bain 2": {
+    "en": "Bathroom 2",
+    "tr": "Banyo 2",
+    "ar": "الحمام 2",
+    "ru": "Ванная 2"
+  },
+  "Extra": {
+    "en": "Extra",
+    "tr": "Extra",
+    "ar": "إضافي",
+    "ru": "Дополнительно"
+  }
+};
+
+function applyI18n(lang) {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (i18n[lang] && i18n[lang][key]) el.innerHTML = i18n[lang][key];
+  });
+  document.querySelectorAll('[data-section]').forEach(el => {
+    const sec = el.getAttribute('data-section');
+    const span = el.querySelector('.sec-label');
+    if (span) {
+      if (lang === 'fr') { span.textContent = sec; }
+      else if (sectionLabels[sec] && sectionLabels[sec][lang]) { span.textContent = sectionLabels[sec][lang]; }
+    }
+  });
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+}
+
+function switchLang(lang, btn) {
+  applyI18n(lang);
+  document.querySelectorAll('.lang-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.lang-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('lang-' + lang).classList.add('active');
+  btn.classList.add('active');
+}
+const photos = [
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636919/039A8859-HDR_dyco1u.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636919/039A8853-HDR_ixo80k.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636917/039A8850-HDR_cbi3k2.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636909/039A8846-HDR_teppp1.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636909/039A8838-HDR_c93ggs.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636906/039A8847-HDR_obsv3p.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636903/039A8816-HDR_sistdd.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636903/039A8805-HDR_vagus8.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636899/039A8796-HDR_f0lidh.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636899/039A8808-HDR_n4ytbw.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636898/039A8802-HDR_e5ybtd.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636880/039A8757-HDR_nhh7ca.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636886/039A8769-HDR_e7vtni.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636888/039A8766-HDR_bhhlre.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636890/039A8765-HDR_apguzw.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636849/039A8630-HDR_vub6bo.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636864/039A8639-HDR_l7gtqa.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636866/039A8645-HDR_ezbhln.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636872/039A8726-HDR_gkmsx0.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636874/039A8739-HDR_y7sy6i.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636886/039A8729-HDR_c6rlvh.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636901/039A8778-HDR_hjcnz4.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636891/039A8775-HDR_zybave.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636888/039A8772-HDR_ttejwf.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636880/039A8744-HDR_iph4k4.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636883/039A8745-HDR_wk8cnh.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636920/039A8865-HDR_a6s7rj.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636919/039A8880_fpluad.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636918/039A8878_isb6mu.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636913/039A8862-HDR_v63fer.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636892/039A8793-HDR_gr3u1t.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636876/039A8708-HDR_oci8hx.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636872/039A8657-HDR_gxb6i6.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636865/039A8651-HDR_rkcbkq.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636865/039A8648-HDR_jugcvo.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636857/039A8690-HDR_ekobd5.jpg",
+  "https://res.cloudinary.com/dofvpeldf/image/upload/v1782636853/039A8684-HDR_xa8krn.jpg",
+];
+
+let currentIdx = 0;
+
+function openLightbox(idx) {
+  currentIdx = idx;
+  document.getElementById('lb-img').src = photos[idx];
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function navLightbox(dir) {
+  currentIdx = (currentIdx + dir + photos.length) % photos.length;
+  document.getElementById('lb-img').src = photos[currentIdx];
+}
+
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === this) closeLightbox();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowRight') navLightbox(1);
+  if (e.key === 'ArrowLeft') navLightbox(-1);
+});
+
+
+applyI18n('fr');
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+reveals.forEach(r => observer.observe(r));
+</script>
+</body>
+</html>
